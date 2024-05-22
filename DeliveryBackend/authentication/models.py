@@ -17,6 +17,7 @@ class User(AbstractUser):
         related_query_name='custom_user'
     )
     user_permissions = models.ManyToManyField(
+        Permission,
         related_name='custom_user_permissions_set',  # Add unique related_name
         blank=True,
         help_text='Specific permissions for this user.',
