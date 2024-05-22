@@ -9,23 +9,17 @@ https://docs.djangoproject.com/en/5.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
-
+import os
 from pathlib import Path
 
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure--v-46kk)@p*!7d+mi8u72ug!vzs_u%b8&6t%j!se=18n^m0+y3'
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = []
 
 AUTH_USER_MODEL = 'authentication.User'
 # Application definition
@@ -44,7 +38,7 @@ INSTALLED_APPS = [
     'rest_framework_swagger',        
     'rest_framework',               
     'drf_yasg',
-    ]
+    'payments',]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -61,7 +55,7 @@ ROOT_URLCONF = 'DeliveryBackend.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -73,6 +67,9 @@ TEMPLATES = [
         },
     },
 ]
+
+PAYSTACK_SECRET_KEY = "sk_test_5d2675968cd35f40485d2f8744bc59728a23e962"
+PAYSTACK_PUBLIC_KEY = "pk_test_da781a0da7cbd0c826e8f53d49bd761355691eee"
 
 WSGI_APPLICATION = 'DeliveryBackend.wsgi.application'
 
