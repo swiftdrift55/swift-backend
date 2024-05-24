@@ -36,8 +36,7 @@ INSTALLED_APPS = [
     'delivery',
     'inventory',
     'rest_framework_swagger',        
-    'rest_framework', 
-    'paystack',              
+    'rest_framework',               
     'drf_yasg',
     'payments',]
 
