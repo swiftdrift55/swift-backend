@@ -19,4 +19,4 @@ class UserSerializer(serializers.ModelSerializer):
 class RiderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Rider
-        fields = '__all__'
+        fields = ['user', 'mobile_number', 'location', 'license_upload']
