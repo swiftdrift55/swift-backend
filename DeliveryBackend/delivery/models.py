@@ -1,10 +1,10 @@
 from django.db import models
 
-from authentication.models import User
+from authentication.models import Customer
 
 # Create your models here.
 class DeliveryRequest(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE, null=True)
     pickup_address = models.CharField(max_length=255)
     sender_location = models.CharField(max_length=255)
     receiver_name = models.CharField(max_length=255)

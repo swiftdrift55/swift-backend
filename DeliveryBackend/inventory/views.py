@@ -1,5 +1,5 @@
 from rest_framework import generics, permissions
-from .models import User, Inventory
+from .models import Inventory
 from rest_framework.authentication import BasicAuthentication, SessionAuthentication
 from .serializers import InventorySerializer
 from django.contrib.auth.decorators import login_required

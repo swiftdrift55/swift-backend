@@ -2,21 +2,31 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
-from .models import Rider, User
-from payments.models import UserWallet
+from .models import Rider, Customer
 
-class UserSerializer(serializers.ModelSerializer):
+
+
+class CustomerRegisterSerializer(serializers.ModelSerializer):
     class Meta:
-        model = User
-        fields = ['id', 'username', 'email', 'password', 'is_rider', 'is_admin']
+        model = Customer
+        fields = ('username', 'email', 'password')
+        # Ensure the password is write-only and not included in responses
         extra_kwargs = {'password': {'write_only': True}}
 
+    # Override create method to properly hash the password
     def create(self, validated_data):
         user = User.objects.create_user(**validated_data)
-        UserWallet.objects.create(user=user)
         return user
     
-class RiderSerializer(serializers.ModelSerializer):
+class RiderRegisterSerializer(serializers.ModelSerializer):
     class Meta:
         model = Rider
-        fields = ['user', 'mobile_number', 'location', 'license_upload']
+        fields = ('first_name','last_name', 'mobile_number', 'email', 'location','password', 'license')
+
+        # Ensure the password is write-only and not included in responses
+        extra_kwargs = {'password': {'write_only': True}}
+
+    # Override create method to properly hash the password
+    def create(self, validated_data):
+        user = User.objects.create_user(**validated_data)
+        return user
