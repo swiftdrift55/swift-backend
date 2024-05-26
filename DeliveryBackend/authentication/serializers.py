@@ -16,12 +16,9 @@ class CustomerRegisterSerializer(serializers.ModelSerializer):
 
     # Override create method to properly hash the password
     def create(self, validated_data):
-        role = validated_data.pop('role', 'customer')
         password = validated_data.pop('password')
         User.objects.create_user(password=password, **validated_data)
         customer = Customer.objects.create_user(password=password, **validated_data)
-        group, created = Group.objects.get_or_create(name=role)
-        customer.groups.add(group)
         return customer
     
 class RiderRegisterSerializer(serializers.ModelSerializer):
@@ -34,10 +31,7 @@ class RiderRegisterSerializer(serializers.ModelSerializer):
 
     # Override create method to properly hash the password
     def create(self, validated_data):
-        role = validated_data.pop('role', 'rider')
         password = validated_data.pop('password')
         User.objects.create_user(password=password, **validated_data)
         rider = Rider.objects.create_user(password=password, **validated_data)
-        group, created = Group.objects.get_or_create(name=role)
-        rider.groups.add(group)
         return rider
