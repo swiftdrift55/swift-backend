@@ -19,3 +19,10 @@ class DeliveryRequestRetrieveUpdateView(generics.RetrieveUpdateAPIView):
     serializer_class = DeliveryRequestSerializer
     authentication_classes = [JWTAuthentication]
     permission_classes = [permissions.IsAuthenticated]
+
+
+class DeliveryRequestDestroyView(generics.DestroyAPIView):
+    queryset = DeliveryRequest.objects.all()
+    serializer_class = DeliveryRequestSerializer
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [permissions.IsAuthenticated]

@@ -18,3 +18,10 @@ class InventoryRetrieveUpdateView(generics.RetrieveUpdateAPIView):
     serializer_class = InventorySerializer
     authentication_classes = [JWTAuthentication]
     permission_classes = [permissions.IsAuthenticated]
+
+
+class InventoryDestroyView(generics.DestroyAPIView):
+    queryset = Inventory.objects.all()
+    serializer_class = InventorySerializer
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [permissions.IsAuthenticated]
