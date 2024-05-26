@@ -10,7 +10,7 @@ from .models import Rider, Customer
 class CustomerRegisterSerializer(serializers.ModelSerializer):
     class Meta:
         model = Customer
-        fields = ('username', 'email', 'password', 'role')
+        fields = ('username', 'email', 'password')
         # Ensure the password is write-only and not included in responses
         extra_kwargs = {'password': {'write_only': True}}
 
@@ -24,7 +24,7 @@ class CustomerRegisterSerializer(serializers.ModelSerializer):
 class RiderRegisterSerializer(serializers.ModelSerializer):
     class Meta:
         model = Rider
-        fields = ('first_name','last_name', 'mobile_number', 'email', 'location','password', 'role')
+        fields = ('first_name','last_name', 'mobile_number', 'email', 'location','password')
 
         # Ensure the password is write-only and not included in responses
         extra_kwargs = {'password': {'write_only': True}}
