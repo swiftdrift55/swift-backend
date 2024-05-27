@@ -1,13 +1,19 @@
+import hmac
+import hashlib
+import json
 from django.conf import settings
+from django.shortcuts import render
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
-from django.shortcuts import render
-from payments.models import Payment
-from .serializers import *
+from django.http import JsonResponse
+from django.views import View
+from .models import Payment
+from .serializers import PaymentSerializer
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
 
-# Create your views here.
 class InitiatePaymentView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -16,14 +22,11 @@ class InitiatePaymentView(APIView):
         if serializer.is_valid():
             payment = serializer.save()
             pk = settings.PAYSTACK_PUBLIC_KEY
+
             serialized_payment_data = serializer.data
-            serialized_payment = PaymentSerializer(payment).data
-            
-            # Remove 'ref' field from the serialized data
-            serialized_payment_data.pop('ref', None)  # Serialize the payment object excluding 'ref' field
-            ref = payment.ref 
+            ref = payment.ref
             context = {
-                'payment': serialized_payment,
+                'payment': serialized_payment_data,
                 'paystack_pub_key': pk,
                 'ref': ref,
             }
@@ -31,18 +34,34 @@ class InitiatePaymentView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class VerifyPaymentView(APIView):
-    permission_classes = [IsAuthenticated]
+@method_decorator(csrf_exempt, name='dispatch')
+class PaystackWebhookView(View):
+    
+    def post(self, request, *args, **kwargs):
+        payload = request.body
+        signature = request.headers.get('x-paystack-signature')
+        secret_key = settings.PAYSTACK_SECRET_KEY
 
-    def get(self, request, ref, *args, **kwargs):
+        if not self.verify_signature(payload, signature, secret_key):
+            return JsonResponse({'status': 'unauthorized'}, status=401)
+
+        event = json.loads(payload)
+        if event['event'] == 'charge.success':
+            self.handle_successful_payment(event['data'])
+
+        return JsonResponse({'status': 'success'}, status=200)
+    
+    def verify_signature(self, payload, signature, secret_key):
+        computed_signature = hmac.new(
+            secret_key.encode(), payload, hashlib.sha512
+        ).hexdigest()
+        return hmac.compare_digest(computed_signature, signature)
+
+    def handle_successful_payment(self, data):
+        ref = data['reference']
         try:
             payment = Payment.objects.get(ref=ref)
+            payment.verified = True
+            payment.save()
         except Payment.DoesNotExist:
-            return Response({"detail": "Payment not found."}, status=status.HTTP_404_NOT_FOUND)
-
-        verified = payment.verify_payment()
-
-        if verified:
-            return Response({"detail": "Payment verified"}, status=status.HTTP_200_OK)
-
-        return Response({"detail": "Payment verification failed."}, status=status.HTTP_400_BAD_REQUEST)
+            pass  # Handle the case where the payment is not found

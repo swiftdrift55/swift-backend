@@ -46,3 +46,4 @@ class Payment(models.Model):
         if self.verified:
             return True
         return False
+        
