@@ -1,17 +1,21 @@
 from django.shortcuts import render
-from requests import Response
-from rest_framework import generics
-from .models import Rider, User
-from .serializers import RiderSerializer, UserSerializer
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework.permissions import AllowAny
+from rest_framework import status, generics
+from rest_framework.permissions import IsAuthenticated
+from .serializers import CustomerRegisterSerializer, RiderRegisterSerializer
+from django.contrib.auth.models import User
+from django.http import Http404
 
 
-class UserSignupView(generics.CreateAPIView):
+class CustomerRegistration(generics.CreateAPIView):
     queryset = User.objects.all()
-    serializer_class = UserSerializer
+    permission_classes = (AllowAny,)
+    serializer_class = CustomerRegisterSerializer
 
-    
 
-
-class RiderSignupView(generics.CreateAPIView):
-    queryset = Rider.objects.all()
-    serializer_class = RiderSerializer
+class RiderRegistration(generics.CreateAPIView):
+    queryset = User.objects.all()
+    permission_classes = (AllowAny,)
+    serializer_class = RiderRegisterSerializer

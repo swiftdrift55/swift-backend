@@ -1,22 +1,37 @@
 """Serializer class for User account"""
 from rest_framework import serializers
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
-from .models import Rider, User
-from payments.models import UserWallet
+from .models import Rider, Customer
 
-class UserSerializer(serializers.ModelSerializer):
+
+
+
+class CustomerRegisterSerializer(serializers.ModelSerializer):
     class Meta:
-        model = User
-        fields = ['id', 'username', 'email', 'password', 'is_rider', 'is_admin']
+        model = Customer
+        fields = ('username', 'email', 'password')
+        # Ensure the password is write-only and not included in responses
         extra_kwargs = {'password': {'write_only': True}}
 
+    # Override create method to properly hash the password
     def create(self, validated_data):
-        user = User.objects.create_user(**validated_data)
-        UserWallet.objects.create(user=user)
-        return user
+        password = validated_data.pop('password')
+        User.objects.create_user(password=password, **validated_data)
+        customer = Customer.objects.create_user(password=password, **validated_data)
+        return customer
     
-class RiderSerializer(serializers.ModelSerializer):
+class RiderRegisterSerializer(serializers.ModelSerializer):
     class Meta:
         model = Rider
-        fields = '__all__'
+        fields = ('first_name','last_name', 'mobile_number', 'email', 'location','password')
+
+        # Ensure the password is write-only and not included in responses
+        extra_kwargs = {'password': {'write_only': True}}
+
+    # Override create method to properly hash the password
+    def create(self, validated_data):
+        password = validated_data.pop('password')
+        User.objects.create_user(password=password, **validated_data)
+        rider = Rider.objects.create_user(password=password, **validated_data)
+        return rider

@@ -1,20 +1,19 @@
 from django.db import models
-from authentication.models import User
+from authentication.models import Customer
 from django.utils import timezone
 import secrets
 from .paystack  import  Paystack
 
 # Create your models here.
-class UserWallet(models.Model):
-    user = models.OneToOneField(User, null=True, on_delete=models.CASCADE)
-    currency = models.CharField(max_length=50, default='GHC')
-    created_at = models.DateTimeField(default=timezone.now, null=True)
+# class UserWallet(models.Model):
+#     user = models.OneToOneField(Customer, null=True, on_delete=models.CASCADE)
+#     currency = models.CharField(max_length=50, default='GHC')
+#     created_at = models.DateTimeField(default=timezone.now, null=True)
 
-    def __str__(self):
-        return self.user.__str__()
+#     def __str__(self):
+#         return self.user.__str__()
 
 class Payment(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
     amount = models.PositiveIntegerField()
     ref = models.CharField(max_length=200)
     email = models.EmailField()
@@ -36,16 +35,15 @@ class Payment(models.Model):
 
         super().save(*args, **kwargs)
 
-    def amount_value(self):
-        return int(self.amount) * 100
 
     def verify_payment(self):
         paystack = Paystack()
         status, result = paystack.verify_payment(self.ref, self.amount)
         if status:
-            if result['amount'] / 100 == self.amount:
+            if result['amount'] == self.amount:
                 self.verified = True
             self.save()
         if self.verified:
             return True
         return False
+        
