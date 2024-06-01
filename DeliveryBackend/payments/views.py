@@ -14,24 +14,24 @@ from .serializers import PaymentSerializer
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 
-class InitiatePaymentView(APIView):
-    permission_classes = [IsAuthenticated]
+# class InitiatePaymentView(APIView):
+#     permission_classes = [IsAuthenticated]
 
-    def post(self, request, *args, **kwargs):
-        serializer = PaymentSerializer(data=request.data, context={'request': request})
-        if serializer.is_valid():
-            payment = serializer.save()
-            pk = settings.PAYSTACK_PUBLIC_KEY
+#     def post(self, request, *args, **kwargs):
+#         serializer = PaymentSerializer(data=request.data, context={'request': request})
+#         if serializer.is_valid():
+#             payment = serializer.save()
+#             pk = settings.PAYSTACK_PUBLIC_KEY
 
-            serialized_payment_data = serializer.data
-            ref = payment.ref
-            context = {
-                'payment': serialized_payment_data,
-                'paystack_pub_key': pk,
-                'ref': ref,
-            }
-            return Response(context, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+#             serialized_payment_data = serializer.data
+#             ref = payment.ref
+#             context = {
+#                 'payment': serialized_payment_data,
+#                 'paystack_pub_key': pk,
+#                 'ref': ref,
+#             }
+#             return Response(context, status=status.HTTP_201_CREATED)
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 @method_decorator(csrf_exempt, name='dispatch')
