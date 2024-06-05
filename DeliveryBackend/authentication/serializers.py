@@ -24,7 +24,7 @@ class CustomerRegisterSerializer(serializers.ModelSerializer):
 class RiderRegisterSerializer(serializers.ModelSerializer):
     class Meta:
         model = Rider
-        fields = ('first_name','last_name', 'mobile_number', 'email', 'location','password')
+        fields = ('first_name','last_name', 'mobile_number', 'email', 'username', 'location','password')
 
         # Ensure the password is write-only and not included in responses
         extra_kwargs = {'password': {'write_only': True}}
