@@ -39,12 +39,13 @@ class Rider(AbstractBaseUser):
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
     email = models.EmailField(unique=True)
+    username = models.CharField(max_length=255, null=True)
     mobile_number = models.CharField(max_length=15)
     location = models.CharField(max_length=100)
     license = models.FileField(upload_to='licenses/')
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = []
+    REQUIRED_FIELDS = ['username']
 
     objects = CustomUserManager()
 
