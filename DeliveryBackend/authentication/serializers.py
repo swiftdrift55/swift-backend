@@ -32,5 +32,6 @@ class RiderRegisterSerializer(serializers.ModelSerializer):
     # Override create method to properly hash the password
     def create(self, validated_data):
         password = validated_data.pop('password')
+        User.objects.create_user(password=password, **validated_data)
         rider = Rider.objects.create_user(password=password, **validated_data)
         return rider
