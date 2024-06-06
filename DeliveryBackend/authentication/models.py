@@ -48,6 +48,10 @@ class Rider(AbstractBaseUser):
     REQUIRED_FIELDS = ['username']
 
     objects = CustomUserManager()
+    
+    def send_notification(self, message):
+        # Implement your notification logic here (e.g., sending an email, SMS, or push notification)
+        print(f"Notification to {self.user.username}: {message}")
 
     def __str__(self):
         return self.email

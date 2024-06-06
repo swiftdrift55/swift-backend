@@ -2,7 +2,7 @@ from django.db import models
 from django.utils import timezone
 from django.core.validators import RegexValidator
 from decimal import Decimal
-from authentication.models import Customer
+from authentication.models import Customer, Rider
 
 
 class DeliveryRequest(models.Model):
@@ -10,6 +10,7 @@ class DeliveryRequest(models.Model):
         ('pending', 'Pending'),
         ('denied', 'Denied'),
         ('accepted', 'Accepted'),
+        ('delivered', 'Delivered'),
     ]
 
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE, null=True)
@@ -22,6 +23,10 @@ class DeliveryRequest(models.Model):
     payment_status = models.BooleanField(default=False)
     payment_value = models.DecimalField(max_digits=10, decimal_places=2, default=Decimal('0.00'))
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='pending')
+    assigned_rider = models.ForeignKey(Rider, on_delete=models.SET_NULL, null=True, blank=True)
+
+    def get_assigned_rider(self):
+        return self.assigned_rider
 
 
     def __str__(self):
