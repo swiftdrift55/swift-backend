@@ -24,6 +24,12 @@ class DeliveryRequest(models.Model):
     payment_value = models.DecimalField(max_digits=10, decimal_places=2, default=Decimal('0.00'))
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='pending')
     assigned_rider = models.ForeignKey(Rider, on_delete=models.SET_NULL, null=True, blank=True)
+    date_of_delivery = models.DateField(null=True, blank=True)
+
+    def save(self, *args, **kwargs):
+        if self.status == 'delivered' and self.date_of_delivery is None:
+            self.date_of_delivery = timezone.now().date()
+        super().save(*args, **kwargs)
 
     def get_assigned_rider(self):
         return self.assigned_rider
