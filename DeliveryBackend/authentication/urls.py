@@ -6,5 +6,6 @@ urlpatterns = [
     path("token/", jwt_views.TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('signup/', CustomerRegistration.as_view(), name='signup'),
     path('rider/signup/', RiderRegistration.as_view(), name='rider-signup'),
+
 ]
 
