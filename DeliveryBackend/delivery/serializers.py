@@ -27,15 +27,17 @@ class RiderDeliveryRequestSerializer(serializers.ModelSerializer):
         fields = ['date_of_delivery', 'pickup_address', 'message']
 
     def create(self, validated_data):
-        request_date = validated_data.get('date_of_delivery', None)
-        if request_date:
-            validated_data['date_of_delivery'] = request_date.strftime('%Y-%m-%d')
+        # Ensure the date_of_delivery is formatted correctly
+        date_of_delivery = validated_data.get('date_of_delivery', None)
+        if date_of_delivery:
+            validated_data['date_of_delivery'] = date_of_delivery.strftime('%Y-%m-%d')
         return super().create(validated_data)
 
     def update(self, instance, validated_data):
-        request_date = validated_data.get('date_of_delivery', None)
-        if request_date:
-            validated_data['date_of_delivery'] = request_date.strftime('%Y-%m-%d')
+        # Ensure the date_of_delivery is formatted correctly
+        date_of_delivery = validated_data.get('date_of_delivery', None)
+        if date_of_delivery:
+            validated_data['date_of_delivery'] = date_of_delivery.strftime('%Y-%m-%d')
         return super().update(instance, validated_data)
 
     def get_message(self, obj):
