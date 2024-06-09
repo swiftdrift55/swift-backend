@@ -31,7 +31,7 @@ class DeliveryRequestDestroyView(generics.DestroyAPIView):
 class RiderDeliveryRequestListView(generics.ListAPIView):
     serializer_class = RiderDeliveryRequestSerializer
     authentication_classes = [JWTAuthentication]
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = (AllowAny,)
 
     def get_queryset(self):
         rider_id = self.kwargs.get('rider_id')
@@ -45,3 +45,12 @@ class CustomerDeliveryRequestsView(generics.ListAPIView):
     def get_queryset(self):
         customer_id = self.kwargs['customer_id']
         return DeliveryRequest.objects.filter(customer__id=customer_id)
+
+class CustomerSuccessfulDeliveryView(generics.ListAPIView):
+    serializer_class = DeliveryRequestSerializer
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        customer_id = self.kwargs['customer_id']
+        return DeliveryRequest.objects.filter(customer__id=customer_id, status='delivered')
