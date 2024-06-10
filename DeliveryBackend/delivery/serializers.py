@@ -44,3 +44,7 @@ class RiderDeliveryRequestSerializer(serializers.ModelSerializer):
         return "You have been assigned to this delivery request."
     
 
+class CustomerSuccesfulDelivery(serializers.ModelSerializer):
+    class Meta:
+        model = DeliveryRequest
+        field = ['date_of_delivery', 'pickup_address', 'message']
