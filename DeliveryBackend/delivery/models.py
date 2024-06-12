@@ -19,6 +19,7 @@ class DeliveryRequest(models.Model):
     sender_location = models.CharField(max_length=255)
     receiver_name = models.CharField(max_length=255)
     receiver_mobile_number = models.CharField(max_length=15, validators=[RegexValidator(regex=r'^\+?1?\d{9,15}$', message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")])
+    sender_email = models.CharField(max_length=250)
     request_date = models.DateField(default=timezone.localdate)
     payment_status = models.BooleanField(default=False)
     payment_value = models.DecimalField(max_digits=10, decimal_places=2, default=Decimal('0.00'))

@@ -4,7 +4,7 @@ from .models import DeliveryRequest
 class DeliveryRequestSerializer(serializers.ModelSerializer):
     class Meta:
         model = DeliveryRequest
-        fields = ('customer', 'item_name', 'pickup_address', 'sender_location', 'receiver_name', 'receiver_mobile_number', 'request_date', 'payment_status', 'payment_value', 'status')
+        fields = ('customer', 'item_name', 'pickup_address', 'sender_location', 'receiver_name', 'receiver_mobile_number', 'sender_email','request_date', 'payment_status', 'payment_value', 'status')
 
     def create(self, validated_data):
         request_date = validated_data.get('request_date', None)
